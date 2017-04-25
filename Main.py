@@ -10,18 +10,17 @@ def main():
 
 def testSpiralClassification(trainFileName, testFileName):
     activationFunction = 'tanh'
-    eta = 0.02
+    eta = 0.1
     numOfLayers = 2
-    maxNeuronsInLayer = 10
+    maxNeuronsInLayer = 8
     inputSize = 2
     outputSize = 1
     learningMethod = 'decent'
-    numOfEpoch = 2000
-    numOfMiniBatch = 5
+    numOfEpoch = 10000
+    numOfMiniBatch = 15
     trainInput, trainOutput, testInput, testOutput = getTrainAndTest(trainFileName, testFileName)
     net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers)
     plt.figure(1)
-    plt.subplot(311)
 
     net.train(trainInput, trainOutput)
     testValues = net.test(testInput, testOutput)
@@ -32,16 +31,19 @@ def testSpiralClassification(trainFileName, testFileName):
         else:
             testValues[i] = 0
 
+    net.getNetwork()
+    plt.subplot(211)
     for i in range(0, len(testInput)):
         if testOutput[i] == 1:
             plt.plot(testInput[i][0],testInput[i][1], 'r.')
         else:
             plt.plot(testInput[i][0],testInput[i][1], 'b.')
-
+    plt.subplot(212)
+    for i in range(0, len(testInput)):
         if testValues[i] == 1:
-            plt.plot(testInput[i][0],testInput[i][1], 'r+')
+            plt.plot(testInput[i][0],testInput[i][1], 'r.')
         else:
-            plt.plot(testInput[i][0],testInput[i][1], 'b+')
+            plt.plot(testInput[i][0],testInput[i][1], 'b.')
 
     plt.show()
 def testCosFunction():

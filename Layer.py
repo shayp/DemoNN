@@ -9,7 +9,7 @@ class Layer:
         self.eta = eta
         self.numOfneuronsInPrevLayer = numOfneuronsInPrevLayer
         self.numOfNeuronsInLayer = numOfNeuronsInLayer
-        self.WMatrix = random.rand(numOfNeuronsInLayer, numOfneuronsInPrevLayer + 1)
+        self.WMatrix = 0.01 * random.rand(numOfNeuronsInLayer, numOfneuronsInPrevLayer + 1)
         self.input = 0
         self.output = 0
         self.weigthedinput = 0
@@ -21,11 +21,14 @@ class Layer:
         #print 'feedForward input: ' + repr(input)
         self.input = input
         input = append(asarray(input), 1)
-        #self.input = delete(input, len(input) - 1)
+        #print '[feedForward] input size: ' + repr(input.size) + ' input val: ' + repr(input)
         if type(input) is ndarray:
             self.weigthedinput = matmul(self.WMatrix, input)
         else:
-            self.weigthedinput = self.WMatrix * input
+            print 'Bug??? '
+            #self.weigthedinput = self.WMatrix * input
+
+        #print '[feedForward] weigthedinput size: ' + repr(self.weigthedinput.size)
         self.output = self.activate(self.weigthedinput)
         #print 'feedForward output: ' + repr(append(self.output, 1))
         return self.output
@@ -48,19 +51,28 @@ class Layer:
         #print 'backprop deltaVector:' + repr(deltaVector)
         self.gradientW += self.eta * deltaVector * transpose(append(asarray(self.input), 0))
         #print 'delta change values' + repr(self.gradientW)
+
     def computeDeltaVector(self,deltaVector, nextLayerW):
+        #print 'computeDeltaVector start, inputs: '
+        #print 'deltaVector ' + repr(deltaVector)
+        #print 'nextLayerW ' + repr(nextLayerW)
         Trm1 = matmul(transpose(deltaVector),nextLayerW)
-        Trm2 = self.derevative(self.weigthedinput)
-        self.deltaVector = multiply(Trm1,Trm2)
+        #print 'Trm 1 ' + repr(Trm1)
+        #print 'self.weigthedinput size: ' + repr(self.weigthedinput.size)
+        Trm2 = self.derevative(append(self.weigthedinput, 1))
+        #print 'Trm 2 ' + repr(Trm2)
+        self.deltaVector = multiply(Trm1, Trm2)
 
         return self.deltaVector
 
     def computeOutputDeltaVector(self,teacheranswer):
         #print 'Expected: ' + repr(teacheranswer) + ' Actual: ' + repr(self.output[0])
         Trm1 = teacheranswer - self.output
-        #print Trm1
+        #print 'Trm 1 ' + repr(Trm1)
         Trm2 = self.derevative(self.weigthedinput)
-        self.deltaVector = multiply(Trm1,Trm2)
+        #print 'Trm 2 ' + repr(Trm2)
+
+        self.deltaVector = multiply(Trm1, Trm2)
         return self.deltaVector
 
     def update(self):
