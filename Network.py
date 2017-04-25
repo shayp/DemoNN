@@ -57,7 +57,7 @@ class Network:
             for xlayer in self.network:
                 nextlayerInput = xlayer.feedForward(nextlayerInput)
             testOutputs.append(nextlayerInput[0])
-            print (outputs[j] - nextlayerInput[0]) * (outputs[j] - nextlayerInput[0])
+            #print (outputs[j] - nextlayerInput[0]) * (outputs[j] - nextlayerInput[0])
 
         return testOutputs
 
