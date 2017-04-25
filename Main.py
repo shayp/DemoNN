@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 def main():
 
     activationFunction = 'tanh'
-    eta = 0.05
-    numOfLayers = 2
+    eta = 0.02
+    numOfLayers = 1
     maxNeuronsInLayer = 5
     inputSize = 1
     outputSize = 1
@@ -22,9 +22,9 @@ def main():
     testoutputs = []
     net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers)
     for i in range(0,5000):
-        inputs.append( math.pi * random())
+        inputs.append( 2 * math.pi * random())
         outputs.append(sin(inputs[i]))
-        testinputs.append(math.pi * random())
+        testinputs.append(2 * math.pi * random())
         testoutputs.append(sin(testinputs[i]))
 
     net.train(inputs,outputs)

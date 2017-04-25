@@ -18,7 +18,7 @@ class Network:
         self.buildNetwork()
 
     def buildNetwork(self):
-        inputLayer = Layer('linear',self.eta, self.inputSize, self.maxNeuronsInLayer)
+        inputLayer = Layer(self.activation,self.eta, self.inputSize, self.maxNeuronsInLayer)
         self.network.append(inputLayer)
         for i in range(1,self.numOfLayers):
             layerX = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.maxNeuronsInLayer)
