@@ -3,7 +3,7 @@ from numpy import *
 from Layer import *
 import matplotlib.pyplot as plt
 class Network:
-    def __init__(self, activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers):
+    def __init__(self, activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,regularizationFactor, momentumFactor):
 
         self.activation = activationFunction
         self.eta = eta
@@ -14,50 +14,88 @@ class Network:
         self.outputSize = outputSize
         self.maxNeuronsInLayer = maxNeuronsInLayer
         self.numOfLayers = numOfLayers
+        self.regularizationFactor = regularizationFactor
         self.network = []
+        self.momentumFactor = momentumFactor
         self.buildNetwork()
 
     def buildNetwork(self):
-        inputLayer = Layer(self.activation,self.eta, self.inputSize, self.maxNeuronsInLayer)
-        self.network.append(inputLayer)
+
+        # set first layer
+        firstLayer = Layer(self.activation,self.eta, self.inputSize, self.maxNeuronsInLayer, self.regularizationFactor, self.momentumFactor)
+        self.network.append(firstLayer)
+
+        # insert all the layers to the network object
         for i in range(1,self.numOfLayers):
-            layerX = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.maxNeuronsInLayer)
+            layerX = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.maxNeuronsInLayer, self.regularizationFactor, self.momentumFactor)
             self.network.append(layerX)
 
-        outputLayer = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.outputSize)
+        # insert the output layer
+        outputLayer = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.outputSize, self.regularizationFactor, self.momentumFactor)
         self.network.append(outputLayer)
 
     def train(self,inputs, outputs):
+
+        # Eun for each epoch
         for i in range(0,self.numOfEpoch):
+
             print 'epoch num is ' + repr(i)
+
+            # Run for each input in the train data
             for j in range(0, len(inputs)):
+
                 nextlayerInput = inputs[j]
+
+                # feed forward the input
                 for xlayer in self.network:
                     nextlayerInput = xlayer.feedForward(nextlayerInput)
 
+                # get output layer delta vector
                 deltaVector = self.network[len(self.network) - 1].computeOutputDeltaVector(outputs[j])
+
+                # get last layer weights
                 layerWeight  = self.network[len(self.network) - 1].getWeights()
-                self.network[len(self.network) - 1].backProp(deltaVector)
+
+                # run back propogation algorithm for last layer
+                self.network[len(self.network) - 1].backProp()
+
+                # if it is mini batch modulo, update the weights
                 if j % self.numOfMiniBatch == 0:
                     self.network[len(self.network) - 1].update()
 
-                for k in range(0, len(self.network) - 2):
+                for k in range(0, len(self.network) - 1):
+                    # The index of the wanted layer to update
                     m = len(self.network) - 2 - k
+
+                    # Calculating delta vector of layer m
                     deltaVector = self.network[m].computeDeltaVector(deltaVector, layerWeight)
+
+                    # getting weights  of layer m
                     layerWeight = self.network[m].getWeights()
-                    self.network[m].backProp(deltaVector)
+
+                    # run backpropogation algorithm for layer m
+                    self.network[m].backProp()
+
+                    # if it is mini batch modulo, update the weights
                     if j % self.numOfMiniBatch == 0:
                         self.network[m].update()
 
 
     def test(self,inputs, outputs):
+
         testOutputs = []
+
+        # Run on all test data set
         for j in range(0,len(inputs)):
+            # Get input
             nextlayerInput = inputs[j]
+
+            # Feed feadforward algorithm for all layers
             for xlayer in self.network:
                 nextlayerInput = xlayer.feedForward(nextlayerInput)
+
+            # Add the result of last layer feedforward to the outputs array
             testOutputs.append(nextlayerInput[0])
-            #print (outputs[j] - nextlayerInput[0]) * (outputs[j] - nextlayerInput[0])
 
         return testOutputs
 

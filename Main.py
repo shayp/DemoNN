@@ -6,20 +6,23 @@ import matplotlib.pyplot as plt
 import csv
 
 def main():
-    testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv')
+    #testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv')
+    testCosFunction()
 
 def testSpiralClassification(trainFileName, testFileName):
     activationFunction = 'tanh'
-    eta = 0.1
+    eta = 0.01
     numOfLayers = 2
-    maxNeuronsInLayer = 8
+    maxNeuronsInLayer = 20
     inputSize = 2
     outputSize = 1
     learningMethod = 'decent'
-    numOfEpoch = 10000
-    numOfMiniBatch = 15
+    numOfEpoch = 5000
+    numOfMiniBatch = 5
+    regularizationFactor = 0.0
+    momentumFactor = 0.7
     trainInput, trainOutput, testInput, testOutput = getTrainAndTest(trainFileName, testFileName)
-    net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers)
+    net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,regularizationFactor, momentumFactor)
     plt.figure(1)
 
     net.train(trainInput, trainOutput)
@@ -46,27 +49,30 @@ def testSpiralClassification(trainFileName, testFileName):
             plt.plot(testInput[i][0],testInput[i][1], 'b.')
 
     plt.show()
+
 def testCosFunction():
     activationFunction = 'tanh'
     eta = 0.02
-    numOfLayers = 1
-    maxNeuronsInLayer = 10
+    numOfLayers = 2
+    maxNeuronsInLayer = 4
     inputSize = 1
     outputSize = 1
     learningMethod = 'decent'
     numOfEpoch = 2000
     numOfMiniBatch = 5
+    regularizationFactor = 0.0
+    momentumFactor = 0.7
 
     inputs  = []
     outputs = []
     testinputs  = []
     testoutputs = []
-    net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers)
+    net = Network(activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,regularizationFactor,momentumFactor)
     for i in range(0,5000):
         inputs.append(2 * math.pi * uniform(0, 1))
-        outputs.append(cos(inputs[i]))
+        outputs.append(sin(inputs[i]))
         testinputs.append(2 * math.pi * uniform(0, 1))
-        testoutputs.append(cos(testinputs[i]))
+        testoutputs.append(sin(testinputs[i]))
 
     net.train(inputs,outputs)
     testValues = net.test(testinputs, testoutputs)

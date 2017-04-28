@@ -21,7 +21,7 @@ class ActivationFunction:
             print 'error'
         return output
 
-    def dervative(self, input):
+    def derivative(self, input):
         if (self.activationFunction == 'tanh'):
             x = tanh(input)
             output = 1 - x*x;
