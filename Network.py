@@ -81,7 +81,7 @@ class Network:
                         self.network[m].update()
 
 
-    def test(self,inputs, outputs):
+    def test(self,inputs):
 
         testOutputs = []
 

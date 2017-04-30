@@ -16,7 +16,7 @@ class ActivationFunction:
         elif (self.activationFunction == 'linear'):
             output = input
         elif (self.activationFunction == 'relu'):
-            print 'relu not implemented yet'
+            output = max(0, input)
         else:
             print 'error'
         return output
@@ -24,14 +24,14 @@ class ActivationFunction:
     def derivative(self, input):
         if (self.activationFunction == 'tanh'):
             x = tanh(input)
-            output = 1 - x*x;
+            output = 1 - x * x
         elif (self.activationFunction == 'sigmoid'):
             x = 1 / (1 + exp(-input))
-            output =  x * (1 - x)
+            output = x * (1 - x)
         elif (self.activationFunction == 'linear'):
             output = input
         elif (self.activationFunction == 'relu'):
-            print 'relu not implemented yet'
+            output = 1. * (input > 0)
         else:
             print 'error'
         return output

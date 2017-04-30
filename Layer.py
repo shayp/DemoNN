@@ -14,7 +14,7 @@ class Layer:
         self.output = 0
         self.weigthedinput = 0
         self.currentDerivative = 0
-        self.momentumFactor  = momentumFactor
+        self.momentumFactor = momentumFactor
         self.regularizationFactor = regularizationFactor
         self.deltaW = zeros((numOfNeuronsInLayer, numOfneuronsInPrevLayer + 1))
         self.momentumChange = 0
@@ -68,7 +68,7 @@ class Layer:
             deltaVectorToMul = reshape(self.deltaVector, (self.deltaVector.size,1))
 
             # We calculate the deltaW value for change
-            currentChange = self.eta * matmul(deltaVectorToMul, inputToMul) - self.regularizationFactor * self.getWeights() + self.momentumFactor * self.momentumChange
+            currentChange = self.eta * matmul(deltaVectorToMul, inputToMul) - self.regularizationFactor * self.eta * self.getWeights() + self.momentumFactor * self.momentumChange
 
         # We update the deltaW with current calculation
         self.deltaW += currentChange

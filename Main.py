@@ -6,18 +6,18 @@ import matplotlib.pyplot as plt
 import csv
 
 def main():
-    #testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv')
-    testCosFunction()
+    testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv')
+    #testCosFunction()
 
 def testSpiralClassification(trainFileName, testFileName):
     activationFunction = 'tanh'
     eta = 0.01
     numOfLayers = 2
-    maxNeuronsInLayer = 20
+    maxNeuronsInLayer = 11
     inputSize = 2
     outputSize = 1
     learningMethod = 'decent'
-    numOfEpoch = 5000
+    numOfEpoch = 20000
     numOfMiniBatch = 5
     regularizationFactor = 0.0
     momentumFactor = 0.7
@@ -26,7 +26,7 @@ def testSpiralClassification(trainFileName, testFileName):
     plt.figure(1)
 
     net.train(trainInput, trainOutput)
-    testValues = net.test(testInput, testOutput)
+    testValues = net.test(testInput)
 
     for i in range(0,len(testValues)):
         if testValues[i] >= 0.5:
@@ -53,7 +53,7 @@ def testSpiralClassification(trainFileName, testFileName):
 def testCosFunction():
     activationFunction = 'tanh'
     eta = 0.02
-    numOfLayers = 2
+    numOfLayers = 1
     maxNeuronsInLayer = 4
     inputSize = 1
     outputSize = 1
@@ -75,7 +75,7 @@ def testCosFunction():
         testoutputs.append(sin(testinputs[i]))
 
     net.train(inputs,outputs)
-    testValues = net.test(testinputs, testoutputs)
+    testValues = net.test(testinputs)
     net.getNetwork()
     plt.figure(1)
     plt.subplot(311)
