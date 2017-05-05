@@ -2,6 +2,7 @@ __author__ = 'shay-macbook'
 from numpy import *
 from Layer import *
 import matplotlib.pyplot as plt
+from random import *
 class Network:
     def __init__(self, activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,regularizationFactor, momentumFactor):
 
@@ -34,24 +35,27 @@ class Network:
         outputLayer = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.outputSize, self.regularizationFactor, self.momentumFactor)
         self.network.append(outputLayer)
 
-    def train(self,inputs, outputs):
+    def train(self,trainData):
 
-        # Eun for each epoch
+        localTrainedData = trainData
+        # Run for each epoch
         for i in range(0,self.numOfEpoch):
+
+            # We shuffle the training data each epoch in order to make the learning unbiased
+            shuffle(localTrainedData)
 
             print 'epoch num is ' + repr(i)
 
             # Run for each input in the train data
-            for j in range(0, len(inputs)):
-
-                nextlayerInput = inputs[j]
+            for j in range(0, len(localTrainedData)):
+                nextlayerInput = localTrainedData[j][0], localTrainedData[j][1]
 
                 # feed forward the input
                 for xlayer in self.network:
                     nextlayerInput = xlayer.feedForward(nextlayerInput)
 
                 # get output layer delta vector
-                deltaVector = self.network[len(self.network) - 1].computeOutputDeltaVector(outputs[j])
+                deltaVector = self.network[len(self.network) - 1].computeOutputDeltaVector(localTrainedData[j][2])
 
                 # get last layer weights
                 layerWeight  = self.network[len(self.network) - 1].getWeights()
@@ -81,14 +85,14 @@ class Network:
                         self.network[m].update()
 
 
-    def test(self,inputs):
+    def test(self,testData):
 
         testOutputs = []
 
         # Run on all test data set
-        for j in range(0,len(inputs)):
+        for j in range(0,len(testData)):
             # Get input
-            nextlayerInput = inputs[j]
+            nextlayerInput = testData[j][0],testData[j][1]
 
             # Feed feadforward algorithm for all layers
             for xlayer in self.network:
