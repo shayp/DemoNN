@@ -2,7 +2,7 @@ __author__ = 'shay-macbook'
 from numpy import *
 from activationFunction import *
 class Layer:
-    def __init__(self, activationFunction, eta, numOfneuronsInPrevLayer, numOfNeuronsInLayer, regularizationFactor, momentumFactor):
+    def __init__(self, activationFunction, eta, numOfneuronsInPrevLayer, numOfNeuronsInLayer, L2regularizationFactor, L1regularizationFactor, momentumFactor):
 
         self.activationFunctionName = activationFunction
         self.activationFunction = ActivationFunction(activationFunction)
@@ -15,7 +15,9 @@ class Layer:
         self.weigthedinput = 0
         self.currentDerivative = 0
         self.momentumFactor = momentumFactor
-        self.regularizationFactor = regularizationFactor
+        self.L2regularizationFactor = L2regularizationFactor
+        self.L1regularizationFactor = L1regularizationFactor
+
         self.deltaW = zeros((numOfNeuronsInLayer, numOfneuronsInPrevLayer + 1))
         self.momentumChange = 0
 
@@ -60,7 +62,7 @@ class Layer:
 
         # In case of a paramater and not a vector, do classic mul
         if self.input.size  == 1 or self.deltaVector.size == 1:
-            currentChange = self.eta * self.deltaVector * transpose(self.input) - self.regularizationFactor * self.getWeights() + self.momentumFactor * self.momentumChange
+            currentChange = self.eta * self.deltaVector * transpose(self.input) - self.L2regularizationFactor * self.eta * self.getWeights() + self.momentumFactor * self.momentumChange - self.L1regularizationFactor * self.eta * sign(self.getWeights())
         else:
 
             # We chanhe the vector to a ndarry struct in order to creat a matrix
@@ -68,7 +70,7 @@ class Layer:
             deltaVectorToMul = reshape(self.deltaVector, (self.deltaVector.size,1))
 
             # We calculate the deltaW value for change
-            currentChange = self.eta * matmul(deltaVectorToMul, inputToMul) - self.regularizationFactor * self.eta * self.getWeights() + self.momentumFactor * self.momentumChange
+            currentChange = self.eta * matmul(deltaVectorToMul, inputToMul) - self.L2regularizationFactor * self.eta * self.getWeights() + self.momentumFactor * self.momentumChange - self.L1regularizationFactor * self.eta * sign(self.getWeights())
 
         # We update the deltaW with current calculation
         self.deltaW += currentChange

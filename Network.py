@@ -4,7 +4,7 @@ from Layer import *
 import matplotlib.pyplot as plt
 from random import *
 class Network:
-    def __init__(self, activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,regularizationFactor, momentumFactor):
+    def __init__(self, activationFunction, eta, learningMethod, numOfEpoch, numOfMiniBatch, inputSize, outputSize, maxNeuronsInLayer, numOfLayers,L2regularizationFactor,L1regularizationFactor, momentumFactor):
 
         self.activation = activationFunction
         self.eta = eta
@@ -15,7 +15,8 @@ class Network:
         self.outputSize = outputSize
         self.maxNeuronsInLayer = maxNeuronsInLayer
         self.numOfLayers = numOfLayers
-        self.regularizationFactor = regularizationFactor
+        self.L2regularizationFactor = L2regularizationFactor
+        self.L1regularizationFactor = L1regularizationFactor
         self.network = []
         self.momentumFactor = momentumFactor
         self.buildNetwork()
@@ -23,16 +24,16 @@ class Network:
     def buildNetwork(self):
 
         # set first layer
-        firstLayer = Layer(self.activation,self.eta, self.inputSize, self.maxNeuronsInLayer, self.regularizationFactor, self.momentumFactor)
+        firstLayer = Layer(self.activation,self.eta, self.inputSize, self.maxNeuronsInLayer, self.L2regularizationFactor,self.L1regularizationFactor, self.momentumFactor)
         self.network.append(firstLayer)
 
         # insert all the layers to the network object
         for i in range(1,self.numOfLayers):
-            layerX = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.maxNeuronsInLayer, self.regularizationFactor, self.momentumFactor)
+            layerX = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.maxNeuronsInLayer, self.L2regularizationFactor,self.L1regularizationFactor, self.momentumFactor)
             self.network.append(layerX)
 
         # insert the output layer
-        outputLayer = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.outputSize, self.regularizationFactor, self.momentumFactor)
+        outputLayer = Layer(self.activation,self.eta, self.maxNeuronsInLayer, self.outputSize, self.L2regularizationFactor,self.L1regularizationFactor, self.momentumFactor)
         self.network.append(outputLayer)
 
     def train(self,trainData):
