@@ -8,8 +8,8 @@ import pickle
 
 
 def main():
-    #testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv', 'Netowrk.bin')
-    RunSerializedNetwork('DATA_TRAIN.csv', 'DATA_valid.csv', 'Netowrk.bin')
+    #testSpiralClassification('DATA_TRAIN.csv', 'DATA_valid.csv', 'Network.bin')
+    RunSerializedNetwork('DATA_TRAIN.csv', 'DATA_valid.csv', 'Network.bin')
 
 
 def RunSerializedNetwork(trainPath, testPath, networkPath):
